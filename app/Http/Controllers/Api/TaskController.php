@@ -19,7 +19,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::all();
+        $user_id = auth()->user()->id;
+        return Task::where('user_id', $user_id)->get();
     }
 
     /**
@@ -33,13 +34,13 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required',
             'name' => 'required',
         ]);
 
+        $user_id = auth()->user()->id;
 
         return Task::create(        [
-            'user_id' =>  $request['user_id'],
+            'user_id' =>  $user_id,
             'name' =>  $request['name'],
         ]);
     }
@@ -56,7 +57,7 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         
-        if(!$task) {
+        if(!$task || auth()->user()->id != $task->user_id) {
             return response([
                 'message' => 'Not found'
             ], 404);
@@ -77,6 +78,13 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         $task = Task::find($id);
+
+        if(!$task || auth()->user()->id != $task->user_id) {
+            return response([
+                'message' => 'Not found'
+            ], 404);
+        }
+
         $task->update($request->all());
         return $task;
     }
@@ -91,6 +99,13 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        return Task::destroy($id);
+        $task = Task::find($id);
+        
+        if(!$task || auth()->user()->id != $task->user_id) {
+            return response([
+                'message' => 'Not found'
+            ], 404);
+        }
+        return $task->destroy($id);
     }
 }
