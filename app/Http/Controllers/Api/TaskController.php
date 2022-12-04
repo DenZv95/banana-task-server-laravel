@@ -42,6 +42,7 @@ class TaskController extends Controller
         return new TaskResource( Task::create([
             'user_id' =>  $user_id,
             'name' =>  $request['name'],
+            'done' =>  false,
         ]) );
     }
 
