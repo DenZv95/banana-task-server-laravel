@@ -31,10 +31,10 @@ class AuthController extends Controller
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
-        $response = [
+        $response = ['data' => [
             'user' => $user,
             'token' => $token
-        ];
+        ]];
 
         return response($response, 201);
     }
@@ -65,10 +65,10 @@ class AuthController extends Controller
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
-        $response = [
+        $response = ['data' => [
             'user' => $user,
             'token' => $token
-        ];
+        ]];
 
         return response($response, 201);
     }
