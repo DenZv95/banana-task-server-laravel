@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 
 
@@ -20,7 +20,7 @@ class TaskController extends Controller
     public function index()
     {
         $user_id = auth()->user()->id;
-        return Task::where('user_id', $user_id)->get();
+        return TaskResource::collection( Task::where('user_id', $user_id)->get() );
     }
 
     /**
@@ -39,10 +39,10 @@ class TaskController extends Controller
 
         $user_id = auth()->user()->id;
 
-        return Task::create(        [
+        return new TaskResource( Task::create([
             'user_id' =>  $user_id,
             'name' =>  $request['name'],
-        ]);
+        ]) );
     }
 
     /**
@@ -63,7 +63,7 @@ class TaskController extends Controller
             ], 404);
         }
 
-        return $task;
+        return new TaskResource($task);
     }
 
     /**
@@ -86,7 +86,7 @@ class TaskController extends Controller
         }
 
         $task->update($request->all());
-        return $task;
+        return new TaskResource($task);
     }
 
     /**
