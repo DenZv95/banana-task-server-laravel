@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Store a newly created user in storage.
+     *
+     * POST /api/register
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function register(Request $request) {
         $fields = $request->validate([
             'email' => 'required|string|unique:users,email',
@@ -31,6 +39,14 @@ class AuthController extends Controller
         return response($response, 201);
     }
 
+     /**
+     * Store a newly created token in storage.
+     *
+     * POST /api/login
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request) {
         $fields = $request->validate([
             'email' => 'required|string',
@@ -54,6 +70,22 @@ class AuthController extends Controller
             'token' => $token
         ];
 
-        return response($response, 200);
+        return response($response, 201);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * POST /api/logout
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request) {
+        auth()->user()->tokens()->delete();
+
+        return [
+            'message' => 'Logged out'
+        ];
     }
 }
